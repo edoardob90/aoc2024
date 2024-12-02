@@ -43,7 +43,9 @@ cargo run -- input.txt # or example.txt
 
 ### Running Tests
 
-- [ ] Python and Rust solutions include tests based on the example data.
+Python's tests can be run with `pytest test_solution.py` in each day folder.
+
+- [ ] Setup Rust tests
 
 
 ## Implementation Notes
