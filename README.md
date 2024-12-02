@@ -12,7 +12,7 @@ Solutions for [Advent of Code](https://adventofcode.com/) puzzles in multiple la
 .
 ├── 01/
 │   ├── python/
-│   │   └── solution.py
+│   │   └── 01.py
 │   ├── rust/
 │   │   ├── Cargo.toml
 │   │   └── src/
