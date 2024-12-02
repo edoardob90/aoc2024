@@ -12,7 +12,7 @@ Solutions for [Advent of Code](https://adventofcode.com/) puzzles in multiple la
 .
 ├── 01/
 │   ├── python/
-│   │   └── 01.py
+│   │   └── solution.py
 │   ├── rust/
 │   │   ├── Cargo.toml
 │   │   └── src/
@@ -25,13 +25,13 @@ Solutions for [Advent of Code](https://adventofcode.com/) puzzles in multiple la
 
 ## Running Solutions
 
-Naming convention: day folders and solution files have always **2 digits** (e.g., `01.py` or `2024/09/python`).
+Naming convention: day folders have always **2 digits** (e.g., `2024/09/python`).
 
 ### Python
 
 ```bash
 cd <day>/python
-python <day>.py input.txt  # or example.txt
+python solution.py input.txt  # or example.txt
 ```
 
 ### Rust
