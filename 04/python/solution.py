@@ -5,6 +5,20 @@ import pathlib
 import sys
 
 
+def partition(data, n, d=None, upto=True):
+    """
+    Generate sublists of `data`
+    with length up to `n` and offset `d`
+    """
+    offset = d or n
+    slices = []
+    for i in range(0, len(data), offset):
+        slice = data[i : i + n]
+        if upto or len(slice) == n:
+            slices.append(slice)
+    return slices
+
+
 def parse_data(puzzle_input: str) -> list[str]:
     """Parse input data"""
     return puzzle_input.splitlines()
@@ -44,7 +58,37 @@ def part1(data: list[str]) -> int:
 
 def part2(data: list[str]) -> int:
     """Solve part 2"""
-    return 0
+
+    def find_A_positions(grid: list[str]) -> list[tuple[int, int]]:
+        return [
+            (i, j) for i, row in enumerate(grid) for j, c in enumerate(row) if c == "A"
+        ]
+
+    def neighbors(grid: list[str], position: tuple[int, int]) -> list[str]:
+        height, width = len(grid), len(grid[0])
+        x, y = position
+        neighs = []
+
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                new_x, new_y = x + i, y + j
+                if 0 <= new_x < height and 0 <= new_y < width:
+                    neighs.append(grid[new_x][new_y])
+
+        return neighs if len(neighs) == 9 else []
+
+    def check_X_patterns(matrix: list[list[str]]) -> bool:
+        """Check for a X-MAS pattern in a 3x3 submatrix"""
+        patterns = [list("MAS"), list("SAM")]
+        diag = [matrix[i][i] for i in range(3)]
+        anti_diag = [matrix[i][2 - i] for i in range(3)]
+        return diag in patterns and anti_diag in patterns
+
+    a_positions = find_A_positions(data)
+    neighborhoods = [neighbors(data, pos) for pos in a_positions]
+    matrices = [partition(neigh, 3) for neigh in neighborhoods]
+
+    return sum(check_X_patterns(m) for m in matrices if m)
 
 
 def solve(puzzle_input: str) -> tuple[int, int]:
