@@ -46,6 +46,6 @@ Cargo.lock
 
 # Project specific
 prompt.*
-input.txt
+input*.txt
 tmp/
 *.log
