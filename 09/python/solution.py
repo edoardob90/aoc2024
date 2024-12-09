@@ -3,6 +3,7 @@
 
 import pathlib
 import sys
+from bisect import insort
 from typing import Optional
 
 from utils import ilist, partition
@@ -47,29 +48,28 @@ class Disk:
 
         return "".join(out)
 
+    def add_free_block(self, block):
+        insort(self.free, block)
+
     def compact_single(self) -> bool:
         if not self.free:
             return False
 
-        first_gap = min(self.free)
+        first_gap = self.free.pop(0)
 
         for file_id in sorted(self.files, reverse=True):
             if not self.files[file_id]:
                 continue
 
-            last_block = max(self.files[file_id])
+            last_block = self.files[file_id][-1]
 
             if last_block > first_gap:
-                self.free.remove(first_gap)
-                self.free.append(last_block)
-                self.free.sort()
-
-                blocks = self.files[file_id]
-                blocks.remove(last_block)
-                blocks.append(first_gap)
-                blocks.sort()
-
+                self.add_free_block(last_block)
+                self.files[file_id][-1] = first_gap
+                self.files[file_id].sort()
                 return True
+
+        self.add_free_block(first_gap)
 
         return False
 
@@ -77,17 +77,9 @@ class Disk:
         if len(self.free) < size:
             return None
 
-        free_blocks = sorted(self.free)
-
-        start_idx = 0
-        while start_idx <= len(free_blocks) - size:
-            # Get a slice of the required size
-            candidate = free_blocks[start_idx : start_idx + size]
-            # Check if contiguous
-            if all(b - a == 1 for a, b in zip(candidate, candidate[1:])):
-                return candidate[0]
-            # If not, move start to next position
-            start_idx += 1
+        for i in range(len(self.free) - size + 1):
+            if self.free[i + size - 1] - self.free[i] == size - 1:
+                return self.free[i]
 
         return None
 
