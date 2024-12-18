@@ -42,7 +42,24 @@ def part1(
 
 def part2(prog: list[int], n: int, a: int) -> int:
     """Solve part 2"""
+    if n == -1:
+        return a
+    a <<= 3
+    for i in range(8):
+        if part1(prog, a + i, 0, 0) == prog[n:]:
+            s = part2(prog, n - 1, a + i)
+            if s != -1:
+                return s
     return -1
+
+
+def solve(puzzle_input: str) -> tuple[str, int]:
+    """Solve the puzzle for the given input"""
+    prog, a, b, c = parse_data(puzzle_input)
+    p1 = ",".join(str(x) for x in part1(prog, a, b, c, True))
+    p2 = part2(prog, len(prog) - 1, 0)
+    part1(prog, p2, 0, 0, True)
+    return p1, p2
 
 
 if __name__ == "__main__":
