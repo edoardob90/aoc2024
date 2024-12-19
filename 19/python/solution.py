@@ -36,14 +36,11 @@ class Trie:
                 node = node.children[char]
             node.is_end = True
 
-    def search(self, string: str, debug: bool = False) -> bool:
+    def _dp_search(self, string: str, count: bool = False) -> bool | int:
         n = len(string)
-        dp = [True] + [False] * n
+        dp = [1] + [0] * n
 
         for i in range(n):
-            if debug:
-                print(dp)
-
             if not dp[i]:
                 continue
 
@@ -53,10 +50,15 @@ class Trie:
                 node = node.children[string[j]]
                 j += 1
                 if node.is_end:
-                    dp[j] = True
-                    if j == n:
-                        return True
+                    dp[j] = dp[j] + dp[i] if count else True
+
         return dp[n]
+
+    def search(self, string: str) -> bool:
+        return bool(self._dp_search(string, count=False))
+
+    def count(self, string: str) -> int:
+        return self._dp_search(string, count=True)
 
 
 def parse_data(puzzle_input: str) -> tuple[list[str], list[str]]:
@@ -74,7 +76,9 @@ def part1(patterns: list[str], designs: list[str]) -> int:
 
 def part2(patterns: list[str], designs: list[str]) -> int:
     """Solve part 2"""
-    return 0
+    trie = Trie()
+    trie.insert(*patterns)
+    return sum(trie.count(d) for d in designs)
 
 
 def solve(puzzle_input: str) -> tuple[int, int]:
