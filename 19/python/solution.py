@@ -61,30 +61,29 @@ class Trie:
         return self._dp_search(string, count=True)
 
 
-def parse_data(puzzle_input: str) -> tuple[list[str], list[str]]:
+def parse_data(puzzle_input: str) -> tuple[Trie, list[str]]:
     """Parse input data"""
     patterns, designs = puzzle_input.split("\n\n")
-    return patterns.split(", "), designs.splitlines()
+    patterns = patterns.split(", ")
+    trie = Trie()
+    trie.insert(*patterns)
+    return trie, designs.splitlines()
 
 
-def part1(patterns: list[str], designs: list[str]) -> int:
+def part1(patterns: Trie, designs: list[str]) -> int:
     """Solve part 1"""
-    trie = Trie()
-    trie.insert(*patterns)
-    return sum(trie.search(d) for d in designs)
+    return sum(patterns.search(d) for d in designs)
 
 
-def part2(patterns: list[str], designs: list[str]) -> int:
+def part2(patterns: Trie, designs: list[str]) -> int:
     """Solve part 2"""
-    trie = Trie()
-    trie.insert(*patterns)
-    return sum(trie.count(d) for d in designs)
+    return sum(patterns.count(d) for d in designs)
 
 
 def solve(puzzle_input: str) -> tuple[int, int]:
     """Solve the puzzle for the given input"""
-    data = parse_data(puzzle_input)
-    return part1(*data), part2(*data)
+    trie, designs = parse_data(puzzle_input)
+    return part1(trie, designs), part2(trie, designs)
 
 
 if __name__ == "__main__":

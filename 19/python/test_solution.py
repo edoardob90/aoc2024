@@ -24,10 +24,10 @@ def test_parse(example_data: str) -> None:
 
 
 def test_part1(example_data: str) -> None:
-    data = parse_data(example_data)
-    assert part1(*data) == 6
+    trie, designs = parse_data(example_data)
+    assert part1(trie, designs) == 6
 
 
 def test_part2(example_data: str) -> None:
-    data = parse_data(example_data)
-    assert part2(*data) == 16
+    trie, designs = parse_data(example_data)
+    assert part2(trie, designs) == 16
